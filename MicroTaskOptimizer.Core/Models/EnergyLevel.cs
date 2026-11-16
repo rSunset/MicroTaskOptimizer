@@ -3,6 +3,8 @@ namespace MicroTaskOptimizer.Core.Models;
 public enum EnergyLevel
 {
     Low = 1,
-    Medium = 2, 
-    High = 3
+    Low_Medium = 2, 
+    Medium = 3,
+    Medium_High = 4,
+    High = 5,
 }
