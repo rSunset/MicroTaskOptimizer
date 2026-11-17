@@ -3,6 +3,7 @@ using Amazon.Lambda.APIGatewayEvents;
 using Amazon.Lambda.Core;
 using System.Text.Json;
 using MicroTaskOptimizer.Core.Models;
+using MicroTaskOptimizer.Core.Scheduling;
 
 [assembly: LambdaSerializer(typeof(Amazon.Lambda.Serialization.SystemTextJson.DefaultLambdaJsonSerializer))]
 
@@ -44,13 +45,14 @@ public class Function
         
         if (scheduleRequest?.Tasks is null)
         {
-            return CreateResponse(400, new { error = "El campo ‘tasks’ es obligatorio"});
+            return CreateResponse(400, new { error = "El campo ‘tasks’ es obligatorio."});
         }
         
-        context.Logger.LogInformation($"Tareas recibidas: {scheduleRequest.Tasks.Count}");
-        // TODO (micro-tarea futura): filtrar tareas por energía
+        context.Logger.LogInformation($"Tareas recibidas: {scheduleRequest.Tasks.Count}.");
+        List<TaskItem> filteredTasks = TaskFilter.FilterByEnergy(scheduleRequest.Tasks, scheduleRequest.CurrentEnergy);
+        context.Logger.LogInformation($"Tareas filtradas: {filteredTasks.Count}.");
         // TODO (micro-tarea futura): ALGORITMO DE LA MOCHILA 0/1 AQUÍ
 
-        return CreateResponse(200, new { recievedChars = request.Body.Length});
+        return CreateResponse(200, new { receivedChars = request.Body.Length});
     }
 }
