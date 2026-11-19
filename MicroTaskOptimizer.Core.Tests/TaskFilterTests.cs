@@ -131,6 +131,9 @@ public class TaskFilterTests
     [Fact]
     public void FilterByEnergy_LowEnergy_DoesNotModifyOriginalList()
     {
+        // Con energía Low se descartan tareas, así que una implementación que use
+        // RemoveAll sobre la lista original fallaría aquí. Con High no fallaría.
+        
         // Arrange
         var tasks = new List<TaskItem>
         {
