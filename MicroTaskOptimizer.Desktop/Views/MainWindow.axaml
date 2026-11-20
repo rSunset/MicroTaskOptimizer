@@ -1,0 +1,171 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:vm="using:MicroTaskOptimizer.Desktop.ViewModels"
+        x:Class="MicroTaskOptimizer.Desktop.Views.MainWindow"
+        x:DataType="vm:MainViewModel"
+        Title="Optimizador de Micro-tareas"
+        Width="1060" Height="740" MinWidth="900" MinHeight="640">
+
+  <Window.Styles>
+    <Style Selector="TextBlock.section">
+      <Setter Property="FontSize" Value="16"/>
+      <Setter Property="FontWeight" Value="SemiBold"/>
+    </Style>
+    <Style Selector="TextBlock.label">
+      <Setter Property="FontSize" Value="12"/>
+      <Setter Property="Opacity" Value="0.7"/>
+    </Style>
+    <Style Selector="TextBlock.hint">
+      <Setter Property="FontSize" Value="12"/>
+      <Setter Property="Opacity" Value="0.55"/>
+      <Setter Property="TextWrapping" Value="Wrap"/>
+    </Style>
+    <Style Selector="Border.card">
+      <Setter Property="BorderBrush" Value="Gray"/>
+      <Setter Property="BorderThickness" Value="1"/>
+      <Setter Property="CornerRadius" Value="8"/>
+      <Setter Property="Padding" Value="12"/>
+    </Style>
+  </Window.Styles>
+
+  <Grid ColumnDefinitions="1.1*,*" ColumnSpacing="16" Margin="16">
+
+    <!-- ============ IZQUIERDA ============ -->
+    <Grid Grid.Column="0" RowDefinitions="Auto,Auto,*" RowSpacing="12">
+
+      <!-- 1. Tu día -->
+      <Border Grid.Row="0" Classes="card">
+        <StackPanel Spacing="8">
+          <TextBlock Classes="section" Text="1. Tu día"/>
+          <WrapPanel>
+            <StackPanel Spacing="2" Margin="0,0,16,8">
+              <TextBlock Classes="label" Text="¿Cuánta energía tienes ahora?"/>
+              <ComboBox ItemsSource="{Binding EnergyOptions}" SelectedItem="{Binding CurrentEnergy}" MinWidth="160">
+                <ComboBox.ItemTemplate>
+                  <DataTemplate x:DataType="vm:EnergyOption">
+                    <TextBlock Text="{Binding Label}"/>
+                  </DataTemplate>
+                </ComboBox.ItemTemplate>
+              </ComboBox>
+            </StackPanel>
+            <StackPanel Spacing="2" Margin="0,0,0,8">
+              <TextBlock Classes="label" Text="¿A qué hora termina tu día?"/>
+              <TimePicker SelectedTime="{Binding DayEndTime}" ClockIdentifier="24HourClock" MinuteIncrement="5"/>
+            </StackPanel>
+          </WrapPanel>
+        </StackPanel>
+      </Border>
+
+      <!-- 2. Agregar tarea -->
+      <Border Grid.Row="1" Classes="card">
+        <StackPanel Spacing="8">
+          <TextBlock Classes="section" Text="2. Agregar una tarea"/>
+
+          <StackPanel Spacing="2">
+            <TextBlock Classes="label" Text="¿Qué tienes que hacer?"/>
+            <TextBox Text="{Binding NewName}" PlaceholderText="Ej. Estudiar para el examen"/>
+          </StackPanel>
+
+          <WrapPanel>
+            <StackPanel Spacing="2" Margin="0,0,16,8">
+              <TextBlock Classes="label" Text="Duración (minutos)"/>
+              <NumericUpDown Value="{Binding NewDuration}" Minimum="5" Maximum="1440" Increment="5" FormatString="0" Width="140"/>
+            </StackPanel>
+            <StackPanel Spacing="2" Margin="0,0,16,8">
+              <TextBlock Classes="label" Text="Prioridad (1 baja – 5 máxima)"/>
+              <NumericUpDown Value="{Binding NewPriority}" Minimum="1" Maximum="5" Increment="1" FormatString="0" Width="140"/>
+            </StackPanel>
+            <StackPanel Spacing="2" Margin="0,0,0,8">
+              <TextBlock Classes="label" Text="Energía que exige"/>
+              <ComboBox ItemsSource="{Binding EnergyOptions}" SelectedItem="{Binding NewEnergy}" MinWidth="150">
+                <ComboBox.ItemTemplate>
+                  <DataTemplate x:DataType="vm:EnergyOption">
+                    <TextBlock Text="{Binding Label}"/>
+                  </DataTemplate>
+                </ComboBox.ItemTemplate>
+              </ComboBox>
+            </StackPanel>
+          </WrapPanel>
+
+          <StackPanel Spacing="2">
+            <TextBlock Classes="label" Text="Fecha límite (opcional)"/>
+            <StackPanel Orientation="Horizontal" Spacing="8">
+              <CalendarDatePicker SelectedDate="{Binding NewDeadlineDate}" DisplayDateStart="{Binding Today}" Width="170"/>
+              <TimePicker SelectedTime="{Binding NewDeadlineTime}" ClockIdentifier="24HourClock" MinuteIncrement="5"/>
+              <Button Content="Quitar" Command="{Binding ClearDeadlineCommand}"/>
+            </StackPanel>
+            <TextBlock Classes="hint"
+                       Text="Los días anteriores a hoy están bloqueados. Sin hora, vence a las 23:59; sin fecha, vence hoy."/>
+          </StackPanel>
+
+          <Button Content="Agregar tarea" Classes="accent" Command="{Binding AddTaskCommand}" HorizontalAlignment="Left"/>
+        </StackPanel>
+      </Border>
+
+      <!-- 3. Tareas pendientes -->
+      <Border Grid.Row="2" Classes="card">
+        <DockPanel>
+          <TextBlock DockPanel.Dock="Top" Classes="section" Text="3. Tareas pendientes" Margin="0,0,0,8"/>
+          <Button DockPanel.Dock="Bottom" Content="Quitar tarea seleccionada"
+                  Command="{Binding RemoveTaskCommand}" Margin="0,8,0,0"/>
+          <Grid>
+            <TextBlock Classes="hint" Text="Aún no hay tareas. Agrega la primera con el formulario de arriba."
+                       IsVisible="{Binding !HasTasks}"/>
+            <ListBox ItemsSource="{Binding Tasks}" SelectedItem="{Binding SelectedTask}">
+              <ListBox.ItemTemplate>
+                <DataTemplate x:DataType="vm:TaskRow">
+                  <StackPanel Spacing="2">
+                    <TextBlock Text="{Binding Name}" FontWeight="SemiBold"/>
+                    <TextBlock Classes="label" Text="{Binding Details}"/>
+                  </StackPanel>
+                </DataTemplate>
+              </ListBox.ItemTemplate>
+            </ListBox>
+          </Grid>
+        </DockPanel>
+      </Border>
+    </Grid>
+
+    <!-- ============ DERECHA ============ -->
+    <Border Grid.Column="1" Classes="card">
+      <DockPanel>
+        <StackPanel DockPanel.Dock="Top" Spacing="8">
+          <TextBlock Classes="section" Text="Tu horario de hoy"/>
+          <StackPanel Orientation="Horizontal" Spacing="8">
+            <Button Content="Generar horario" Classes="accent" Command="{Binding GenerateCommand}"/>
+            <Button Content="Marcar como hecha" Command="{Binding MarkDoneCommand}"
+                    ToolTip.Tip="Selecciona primero un bloque del horario"/>
+          </StackPanel>
+          <TextBlock Classes="hint" Text="{Binding Status}"/>
+        </StackPanel>
+
+        <StackPanel DockPanel.Dock="Bottom" Spacing="4" Margin="0,8,0,0">
+          <StackPanel IsVisible="{Binding HasUnscheduled}" Spacing="4">
+            <TextBlock Classes="section" Text="No entraron en tu día"/>
+            <ItemsControl ItemsSource="{Binding Unscheduled}"/>
+          </StackPanel>
+          <StackPanel IsVisible="{Binding HasWarnings}" Spacing="4" Margin="0,8,0,0">
+            <TextBlock Classes="section" Text="Avisos"/>
+            <ItemsControl ItemsSource="{Binding Warnings}"/>
+          </StackPanel>
+        </StackPanel>
+
+        <Grid Margin="0,8,0,0">
+          <TextBlock Classes="hint" TextWrapping="Wrap"
+                     Text="Agrega tus tareas y pulsa «Generar horario». Aquí verás el orden recomendado para lo que resta del día."
+                     IsVisible="{Binding !HasSchedule}"/>
+          <ListBox ItemsSource="{Binding Schedule}" SelectedItem="{Binding SelectedBlock}">
+            <ListBox.ItemTemplate>
+              <DataTemplate x:DataType="vm:BlockView">
+                <StackPanel Orientation="Horizontal" Spacing="12">
+                  <TextBlock Text="{Binding Time}" FontWeight="SemiBold" Width="110"/>
+                  <TextBlock Text="{Binding Name}"/>
+                </StackPanel>
+              </DataTemplate>
+            </ListBox.ItemTemplate>
+          </ListBox>
+        </Grid>
+      </DockPanel>
+    </Border>
+  </Grid>
+</Window>

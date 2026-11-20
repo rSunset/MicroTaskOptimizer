@@ -6,6 +6,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MicroTaskOptimizer.Lambda",
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MicroTaskOptimizer.Core.Tests", "MicroTaskOptimizer.Core.Tests\MicroTaskOptimizer.Core.Tests.csproj", "{B7547518-DF2F-4DC6-A19A-9655D429C61A}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MicroTaskOptimizer.Desktop", "MicroTaskOptimizer.Desktop\MicroTaskOptimizer.Desktop.csproj", "{FEAC5147-87BE-4930-83D4-EECB457639BF}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -24,5 +26,9 @@ Global
 		{B7547518-DF2F-4DC6-A19A-9655D429C61A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B7547518-DF2F-4DC6-A19A-9655D429C61A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B7547518-DF2F-4DC6-A19A-9655D429C61A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FEAC5147-87BE-4930-83D4-EECB457639BF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FEAC5147-87BE-4930-83D4-EECB457639BF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FEAC5147-87BE-4930-83D4-EECB457639BF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FEAC5147-87BE-4930-83D4-EECB457639BF}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
