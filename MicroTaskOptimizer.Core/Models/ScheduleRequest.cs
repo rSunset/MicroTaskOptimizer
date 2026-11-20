@@ -2,7 +2,8 @@ namespace MicroTaskOptimizer.Core.Models;
 
 public class ScheduleRequest
 {
-    public List<TaskItem> Tasks { get; set; } = new();
-    public int AvailableMinutes { get; set; }
+    public DateTimeOffset Now { get; set; }
+    public DateTimeOffset DayEnd { get; set; }
     public EnergyLevel CurrentEnergy { get; set; }
+    public List<TaskItem> Tasks { get; set; } = new();
 }
